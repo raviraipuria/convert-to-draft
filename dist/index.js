@@ -65,7 +65,7 @@ function shouldConvertToDraft(timestamp, num_days) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const daysBeforeConvert = parseInt(core.getInput("days-before-convert-draft", { required: true }));
+            const daysBeforeConvert = parseInt(core.getInput('days-before-convert-draft', { required: true }));
             core.info('fetching pull requests');
             const { data: pullRequests } = yield octokit.rest.pulls.list(Object.assign(Object.assign({}, github.context.repo), { state: 'open' }));
             core.info(`open pr count: ${pullRequests.length}`);
