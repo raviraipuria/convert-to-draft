@@ -1,11 +1,16 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Convert To Draft'
+description: 'Convert open pull request to draft with no recent activity'
+author: 'Ravi Raipuria'
 inputs:
-  milliseconds: # change this
+  repo-token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Token for the repository. Can be passed in using `{{ secrets.GITHUB_TOKEN }}`.'
+  days-before-convert-draft:
+    description: 'The number of days to wait before converting a open pull request to draft.'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
+branding:
+  icon: "git-pull-request"
+  color: "black"
