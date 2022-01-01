@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import {shouldConvertToDraft} from '../src/util'
 
 const octokit = github.getOctokit(core.getInput('repo-token'))
 
@@ -22,13 +23,6 @@ async function toDraft(id: string): Promise<void> {
       id
     }
   )
-}
-
-function shouldConvertToDraft(timestamp: string, num_days: number): boolean {
-  const daysInMillis = 1000 * 60 * 60 * 24 * num_days
-  const millisSinceLastUpdated =
-    new Date().getTime() - new Date(timestamp).getTime()
-  return millisSinceLastUpdated > daysInMillis
 }
 
 async function run(): Promise<void> {
