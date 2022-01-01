@@ -4,7 +4,7 @@ Convert open pull requests to draft if they had no activity for a specified amou
 ### Input Options
 
 #### `repo-token`
-**Required** 
+**Required** Follow https://docs.github.com/en/graphql/guides/forming-calls-with-graphql#authenticating-with-graphql to generate access token. At a minimum it should have pullrequest read/write access.
 
 #### `days-before-convert-draft`
 **Required** The idle number of days to wait before converting pull requests to draft.
