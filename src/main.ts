@@ -4,8 +4,7 @@ import {shouldConvertToDraft} from '../src/util'
 
 const octokit = github.getOctokit(core.getInput('repo-token'))
 
-async function toDraft(id: string): Promise<void> {
-  core.info(`converting pr ${id} to draft`)
+async function toDraft(id: string): Promise<void> {  
   await octokit.graphql(
     `
     mutation($id: ID!) {
@@ -13,8 +12,6 @@ async function toDraft(id: string): Promise<void> {
         pullRequest {
           id
           number
-          state
-          isDraft
         }
       }
     }
@@ -30,7 +27,7 @@ async function run(): Promise<void> {
     const daysBeforeConvert = parseInt(
       core.getInput('days-before-convert-draft', {required: true})
     )
-    core.info('fetching pull requests')
+    core.info('fetching all open pull requests')
     const {data: pullRequests} = await octokit.rest.pulls.list({
       ...github.context.repo,
       state: 'open'
@@ -38,9 +35,9 @@ async function run(): Promise<void> {
     core.info(`open pr count: ${pullRequests.length}`)
 
     for (const pr of pullRequests) {
-      if (shouldConvertToDraft(pr.updated_at, daysBeforeConvert)) {
+      if (!pr.draft && shouldConvertToDraft(pr.updated_at, daysBeforeConvert)) {        
         await toDraft(pr.node_id)
-        core.info(`pr converted to draft: ${pr.node_id}`)
+        core.info(`pr converted to draft: ${pr.number} ${pr.title}, last activity time ${pr.updated_at}`)
       }
     }
   } catch (error) {
