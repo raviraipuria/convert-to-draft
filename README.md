@@ -21,7 +21,7 @@ jobs:
   convert-to-draft:
     runs-on: ubuntu-latest
     steps:
-      - uses: raviraipuria/convert-to-draft@v1.0.0
+      - uses: raviraipuria/convert-to-draft@v1.0.1
         with:
           repo-token: ${{ secrets.TOKEN }}
           days-before-convert-draft: 1
