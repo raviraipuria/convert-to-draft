@@ -41,15 +41,12 @@ const util_1 = __nccwpck_require__(2629);
 const octokit = github.getOctokit(core.getInput('repo-token'));
 function toDraft(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`converting pr ${id} to draft`);
         yield octokit.graphql(`
     mutation($id: ID!) {
       convertPullRequestToDraft(input: {pullRequestId: $id}) {
         pullRequest {
           id
           number
-          state
-          isDraft
         }
       }
     }
@@ -62,13 +59,13 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const daysBeforeConvert = parseInt(core.getInput('days-before-convert-draft', { required: true }));
-            core.info('fetching pull requests');
+            core.info('fetching all open pull requests');
             const { data: pullRequests } = yield octokit.rest.pulls.list(Object.assign(Object.assign({}, github.context.repo), { state: 'open' }));
             core.info(`open pr count: ${pullRequests.length}`);
             for (const pr of pullRequests) {
-                if ((0, util_1.shouldConvertToDraft)(pr.updated_at, daysBeforeConvert)) {
+                if (!pr.draft && (0, util_1.shouldConvertToDraft)(pr.updated_at, daysBeforeConvert)) {
                     yield toDraft(pr.node_id);
-                    core.info(`pr converted to draft: ${pr.node_id}`);
+                    core.info(`pr converted to draft: ${pr.number} ${pr.title}, last activity time ${pr.updated_at}`);
                 }
             }
         }
