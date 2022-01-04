@@ -28,9 +28,10 @@ async function run(): Promise<void> {
       core.getInput('days-before-convert-draft', {required: true})
     )
     core.info('fetching all open pull requests')
-    const {data: pullRequests} = await octokit.rest.pulls.list({
+    const pullRequests = await octokit.paginate(octokit.rest.pulls.list, {
       ...github.context.repo,
-      state: 'open'
+      state: 'open',
+      per_page: 100
     })
     core.info(`open pr count: ${pullRequests.length}`)
 
