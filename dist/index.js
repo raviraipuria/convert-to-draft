@@ -60,7 +60,7 @@ function run() {
         try {
             const daysBeforeConvert = parseInt(core.getInput('days-before-convert-draft', { required: true }));
             core.info('fetching all open pull requests');
-            const { data: pullRequests } = yield octokit.rest.pulls.list(Object.assign(Object.assign({}, github.context.repo), { state: 'open' }));
+            const pullRequests = yield octokit.paginate(octokit.rest.pulls.list, Object.assign(Object.assign({}, github.context.repo), { state: 'open', per_page: 100 }));
             core.info(`open pr count: ${pullRequests.length}`);
             for (const pr of pullRequests) {
                 if (!pr.draft && (0, util_1.shouldConvertToDraft)(pr.updated_at, daysBeforeConvert)) {
