@@ -4,6 +4,14 @@ import {shouldConvertToDraft} from '../src/util'
 
 const octokit = github.getOctokit(core.getInput('repo-token'))
 
+async function addComment(number: number, msg: string): Promise<void> {
+  await octokit.rest.issues.createComment({
+    ...github.context.repo,
+    issue_number: number,
+    body: msg
+  })
+}
+
 async function toDraft(id: string): Promise<void> {
   await octokit.graphql(
     `
@@ -27,6 +35,8 @@ async function run(): Promise<void> {
     const daysBeforeConvert = parseInt(
       core.getInput('days-before-convert-draft', {required: true})
     )
+    const draftPullRequestMsg = core.getInput('draft-pr-msg', {required: true})
+
     core.info('fetching all open pull requests')
     const pullRequests = await octokit.paginate(octokit.rest.pulls.list, {
       ...github.context.repo,
@@ -37,6 +47,7 @@ async function run(): Promise<void> {
 
     for (const pr of pullRequests) {
       if (!pr.draft && shouldConvertToDraft(pr.updated_at, daysBeforeConvert)) {
+        await addComment(pr.number, draftPullRequestMsg)
         await toDraft(pr.node_id)
         core.info(
           `pr converted to draft: ${pr.number} ${pr.title}, last activity time ${pr.updated_at}`
