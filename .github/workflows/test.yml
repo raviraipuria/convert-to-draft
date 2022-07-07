@@ -23,3 +23,4 @@ jobs:
         with:
           repo-token: ${{ secrets.TOKEN }}
           days-before-convert-draft: 2
+          draft-pr-msg: 'This PR is converted to draft because it has been opened from past 2 days with no activity'
