@@ -8,6 +8,9 @@ inputs:
   days-before-convert-draft:
     description: 'The number of days to wait before converting a open pull request to draft.'
     required: true
+  draft-pr-msg:
+    description: 'Comment on draft pr'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

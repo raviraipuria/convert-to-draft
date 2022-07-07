@@ -9,6 +9,9 @@ Convert open pull requests to draft if they had no activity for a specified amou
 #### `days-before-convert-draft`
 **Required** The idle number of days to wait before converting pull requests to draft.
 
+#### `draft-pr-msg`
+**Required** Comment on draft pr.
+
 ### Example
 ```yaml
 name: convert-to-draft
